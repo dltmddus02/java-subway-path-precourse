@@ -1,5 +1,7 @@
 package subway.controller;
 
+import static subway.view.input.exception.InputErrorMessage.NOT_CONNECTED;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,6 +43,7 @@ public class SubwayController {
         String arrival = chooseArrival(scanner);
         InputValidator.validateStationFormat(departure, arrival);
 
+        searchPath(pathCriteriaFeature, departure, arrival);
     }
 
 
@@ -88,6 +91,47 @@ public class SubwayController {
                 return input.get();
             } catch (InputException e) {
                 System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    private void searchPath(String pathCriteriaFeature, String departure, String arrival) {
+        List<String> result = new ArrayList<>();
+        if (pathCriteriaFeature.equals("1")) {
+            result = calculateMinimumCostPath.shortestDistance(departure, arrival);
+        }
+        if (pathCriteriaFeature.equals("2")) {
+            result = calculateMinimumCostPath.minimumTime(departure, arrival);
+        }
+        validateExistPath(result);
+        searchDistance(result);
+        OutputView.printResult(totalDistance, totalTime, result);
+    }
+
+    private void validateExistPath(List<String> result) {
+//       이어지지 않는 경우 validate
+        if (result.isEmpty()) {
+            throw new InputException(NOT_CONNECTED);
+        }
+    }
+
+    private void searchDistance(List<String> result) {
+        for (int i = 0; i < result.size() - 1; i++) {
+            String stationName = result.get(i);
+            for (Station station : StationRepository.stations()) {
+                if (station.getName().equals(stationName)) {
+                    for (Map.Entry<Station, Map<Station, List<Integer>>> entrySet : station.getAdjacentStations(station)
+                            .entrySet()) {
+                        Station adjacentStation = entrySet.getKey();
+                        if (adjacentStation.getName().equals(result.get(i + 1))) {
+                            Map<Station, List<Integer>> adjList = entrySet.getValue();
+                            for (List<Integer> adjacentMap : adjList.values()) {
+                                totalDistance += adjacentMap.get(0);
+                                totalTime += adjacentMap.get(1);
+                            }
+                        }
+                    }
+                }
             }
         }
     }
