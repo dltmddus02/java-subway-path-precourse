@@ -1,19 +1,7 @@
 package subway.controller;
 
-import static subway.view.input.exception.InputErrorMessage.NOT_CONNECTED;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.function.Supplier;
-import org.jgrapht.GraphPath;
-import org.jgrapht.graph.DefaultWeightedEdge;
-import subway.domain.Line;
-import subway.domain.LineRepository;
-import subway.domain.Station;
-import subway.domain.StationRepository;
 import subway.service.CalculateMinimumCostPath;
 import subway.view.input.InputValidator;
 import subway.view.input.exception.InputException;
@@ -41,6 +29,9 @@ public class SubwayController {
             run(scanner);
             return;
         }
+        String departure = chooseDeparture(scanner);
+        String arrival = chooseArrival(scanner);
+
     }
 
 
@@ -62,6 +53,25 @@ public class SubwayController {
             return feature;
         });
     }
+
+    private String chooseDeparture(Scanner scanner) {
+        return retryOnInvalidInput(() -> {
+            OutputView.printDepartureStation();
+            String feature = scanner.nextLine();
+            InputValidator.validateExistingStation(feature);
+            return feature;
+        });
+    }
+
+    private String chooseArrival(Scanner scanner) {
+        return retryOnInvalidInput(() -> {
+            OutputView.printArrivalStation();
+            String feature = scanner.nextLine();
+            InputValidator.validateExistingStation(feature);
+            return feature;
+        });
+    }
+
 
     private <T> T retryOnInvalidInput(Supplier<T> input) {
         while (true) {
