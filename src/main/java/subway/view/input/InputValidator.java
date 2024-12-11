@@ -17,4 +17,9 @@ public class InputValidator {
             throw new InputException(InputErrorMessage.INVALID_INPUT);
         }
     }
+    public static void validatePathCriteriaFeature(String input) {
+        if (!input.equals("1") && !input.equals("2") && !input.equals("B")) {
+            throw new InputException(InputErrorMessage.INVALID_INPUT);
+        }
+    }
 }
