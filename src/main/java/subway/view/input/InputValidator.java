@@ -17,9 +17,19 @@ public class InputValidator {
             throw new InputException(InputErrorMessage.INVALID_INPUT);
         }
     }
+
     public static void validatePathCriteriaFeature(String input) {
         if (!input.equals("1") && !input.equals("2") && !input.equals("B")) {
             throw new InputException(InputErrorMessage.INVALID_INPUT);
         }
+    }
+
+    public static void validateExistingStation(String input) {
+        for (Station station : StationRepository.stations()) {
+            if (station.getName().equals(input)) {
+                return;
+            }
+        }
+        throw new InputException(InputErrorMessage.NON_EXIST_STATION);
     }
 }
