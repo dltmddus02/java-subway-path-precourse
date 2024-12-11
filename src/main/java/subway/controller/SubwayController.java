@@ -36,7 +36,11 @@ public class SubwayController {
         if (mainFeature.equals("Q")) {
             return;
         }
-
+        String pathCriteriaFeature = choosePathCriteriaFeature(scanner);
+        if (pathCriteriaFeature.equals("B")) {
+            run(scanner);
+            return;
+        }
     }
 
 
@@ -49,7 +53,15 @@ public class SubwayController {
         });
     }
 
-
+    private String choosePathCriteriaFeature(Scanner scanner) {
+        return retryOnInvalidInput(() -> {
+            OutputView.printPathCriteria();
+            OutputView.printFeature();
+            String feature = scanner.nextLine();
+            InputValidator.validatePathCriteriaFeature(feature);
+            return feature;
+        });
+    }
 
     private <T> T retryOnInvalidInput(Supplier<T> input) {
         while (true) {
