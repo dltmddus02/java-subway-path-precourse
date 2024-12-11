@@ -31,6 +31,7 @@ public class SubwayController {
         }
         String departure = chooseDeparture(scanner);
         String arrival = chooseArrival(scanner);
+        InputValidator.validateStationFormat(departure, arrival);
 
     }
 

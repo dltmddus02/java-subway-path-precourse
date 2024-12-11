@@ -32,4 +32,10 @@ public class InputValidator {
         }
         throw new InputException(InputErrorMessage.NON_EXIST_STATION);
     }
+
+    public static void validateStationFormat(String departure, String arrival) {
+        if (departure.equals(arrival)) {
+            throw new InputException(InputErrorMessage.DEPARTURE_ARRIVAL_ARE_SAME);
+        }
+    }
 }
